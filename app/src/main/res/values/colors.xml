@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#418DF8</color>
+    <color name="colorPrimary">#4B6C9C</color>
     <color name="colorPrimaryDark">#60728B</color>
     <color name="colorAccent">#418DF8</color>
 
@@ -12,4 +12,6 @@
     <color name="textSecondary">#535a68</color>
 
     <color name="editTextBackground">#1A999696</color>
+
+    <color name="myCommentBackground">#E0EDFD</color>
 </resources>

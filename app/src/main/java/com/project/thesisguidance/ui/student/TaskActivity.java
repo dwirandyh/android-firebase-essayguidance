@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
 
 public class TaskActivity extends AppCompatActivity {
 
+    private static final String TAG = "TaskActivity";
     FloatingActionButton buttonAddTask;
     RecyclerView rvTask;
     TaskAdapter adapter = new TaskAdapter();
@@ -77,7 +79,7 @@ public class TaskActivity extends AppCompatActivity {
         rvTask.setAdapter(adapter);
     }
 
-    private void getTaskByStudentId(String studentId) {
+    private void getTaskByStudentId(final String studentId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("task")
                 .whereEqualTo("studentId", studentId)
@@ -94,6 +96,8 @@ public class TaskActivity extends AppCompatActivity {
                                 studentTasks.add(studentTask);
                             }
                             adapter.setStudentTasks(studentTasks);
+                        }else{
+                            Log.w(TAG, "No Task for student id "+ studentId);
                         }
                     }
                 });
