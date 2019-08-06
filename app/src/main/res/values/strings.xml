@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Essay Guidance</string>
+    <string name="add_task">Add Task</string>
+    <string name="add_task_subtitle">Make sure all information entered in the assignment form is filled in correctly</string>
+    <string name="task_name">Task Name</string>
+    <string name="task_description">Task Description</string>
+    <string name="task_file_url">Task File Url</string>
+    <string name="submit_task">Submit Task</string>
+    <string name="lecturer_login_subtitle">Please enter your NPM and password to access your account</string>
+    <string name="lecturer_login_title">Login As Lecturer</string>
+    <string name="sign_in">Sign In</string>
+    <string name="npm">Your NPM</string>
+    <string name="password">Password</string>
+    <string name="nik">Your NIK</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="back">Back</string>
+</resources>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "65481691048",
+    "firebase_url": "https://thesis-guidance.firebaseio.com",
+    "project_id": "thesis-guidance",
+    "storage_bucket": "thesis-guidance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65481691048:android:bd5c39f058ab618d",
+        "android_client_info": {
+          "package_name": "com.project.thesisguidance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65481691048-p69657867p70qu204fpnqsagfan2vrji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.thesisguidance",
+            "certificate_hash": "ba16495f28d547ff4dd03f39418776128dddc8c0"
+          }
+        },
+        {
+          "client_id": "65481691048-bg7m0leab9c3ti4nmud251it2vbv877f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuJNSLadc3oNMxFvUQiEVXOzqo_IGgYeo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65481691048-bg7m0leab9c3ti4nmud251it2vbv877f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
