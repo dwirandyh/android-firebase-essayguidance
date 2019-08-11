@@ -9,4 +9,7 @@ public class Constant {
     public static String STUDENT_ID = "STUDENT_ID";
 
     public static String TASK_ID = "EXTRA_TASK_ID";
+
+    public static String ON_PROGRESS = "On Progress";
+    public static String ACC = "ACC";
 }

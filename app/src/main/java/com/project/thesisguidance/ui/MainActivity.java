@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.project.thesisguidance.R;
 import com.project.thesisguidance.ui.lecturer.LecturerLoginActivity;
+import com.project.thesisguidance.ui.lecturer.LecturerTaskActivity;
 import com.project.thesisguidance.ui.student.StudentLoginActivity;
 import com.project.thesisguidance.ui.student.TaskActivity;
 import com.project.thesisguidance.utils.Constant;
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         String loggedLecturer = SharedPreferenceHelper.getString(this, Constant.LOGGED_LECTURER_ID);
         if (!loggedLecturer.isEmpty()){
-            //Todo: Open Lecturer Task Activity
+            Intent intent = new Intent(this, LecturerTaskActivity.class);
+            startActivity(intent);
         }
 
     }

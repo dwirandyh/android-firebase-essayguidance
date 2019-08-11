@@ -75,7 +75,7 @@ public class StudentLoginActivity extends AppCompatActivity {
             textInputLayoutNpm.setError("NPM harus diisi");
         } else if (password.isEmpty()) {
             textInputLayoutPassword.setError("Password harus diisi");
-        }else{
+        } else {
             doLogin(npm, password);
         }
     }
@@ -99,9 +99,9 @@ public class StudentLoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        dialog.dismiss();
                         if (task.isSuccessful()) {
                             if (task.getResult() != null && task.getResult().size() > 0) {
-                                dialog.dismiss();
 
                                 String studentId = task.getResult().getDocuments().get(0).getId();
                                 String lecturerId = task.getResult().getDocuments().get(0).getString("lecturerId");

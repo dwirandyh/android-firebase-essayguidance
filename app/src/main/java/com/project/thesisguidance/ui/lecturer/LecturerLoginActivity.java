@@ -92,10 +92,10 @@ public class LecturerLoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        dialog.dismiss();
+
                         if (task.isSuccessful()) {
                             if (task.getResult() != null && task.getResult().size() > 0) {
-                                dialog.dismiss();
-
                                 String lecturerId = task.getResult().getDocuments().get(0).getId();
                                 saveLoginSession(lecturerId);
                                 openTaskActivity();
@@ -115,7 +115,7 @@ public class LecturerLoginActivity extends AppCompatActivity {
     }
 
     private void openTaskActivity() {
-        //Intent intent = new Intent(LecturerLoginActivity.this, TaskActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(LecturerLoginActivity.this, LecturerTaskActivity.class);
+        startActivity(intent);
     }
 }

@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -89,6 +91,8 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         });
 
+
+
         nestedScrollView = findViewById(R.id.nestedScrollView);
 
         textInputComment = findViewById(R.id.textInputComment);
@@ -167,7 +171,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 });
     }
 
-    private void bindUIStudentTask(StudentTask studentTask) {
+    private void bindUIStudentTask(final StudentTask studentTask) {
         TextView tvTaskName = findViewById(R.id.tvTaskName);
         TextView tvDate = findViewById(R.id.tvDate);
         TextView tvStatus = findViewById(R.id.tvStatus);
@@ -186,6 +190,15 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (!studentTask.getAttachmentUrl().isEmpty()) {
             buttonDownloadAttachment.setVisibility(View.VISIBLE);
             tvAttachmentStatus.setText(getResources().getString(R.string.attachment));
+
+            buttonDownloadAttachment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri uri = Uri.parse(studentTask.getAttachmentUrl());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            });
         }
     }
 

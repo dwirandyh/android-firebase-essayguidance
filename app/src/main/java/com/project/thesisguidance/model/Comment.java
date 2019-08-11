@@ -6,6 +6,7 @@ public class Comment {
     private String comment = "";
     private String name = "";
     private String studentId = "";
+    private String lecturerId = "";
     private String taskId = "";
     private Timestamp createdAt;
 
@@ -47,5 +48,13 @@ public class Comment {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getLecturerId() {
+        return lecturerId;
+    }
+
+    public void setLecturerId(String lecturerId) {
+        this.lecturerId = lecturerId;
     }
 }

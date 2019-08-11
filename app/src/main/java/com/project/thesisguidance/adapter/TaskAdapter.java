@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.thesisguidance.R;
 import com.project.thesisguidance.model.StudentTask;
+import com.project.thesisguidance.ui.lecturer.LecturerTaskDetailActivity;
 import com.project.thesisguidance.ui.student.TaskDetailActivity;
 import com.project.thesisguidance.utils.Constant;
+import com.project.thesisguidance.utils.SharedPreferenceHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,9 +78,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    Intent intent = new Intent();
+
                     StudentTask studentTask = studentTasks.get(getAdapterPosition());
 
-                    Intent intent = new Intent(itemView.getContext(), TaskDetailActivity.class);
+                    String loggedStudentId = SharedPreferenceHelper.getString(itemView.getContext(), Constant.LOGGED_STUDENT_ID);
+                    if (!loggedStudentId.isEmpty()){
+                        intent = new Intent(itemView.getContext(), TaskDetailActivity.class);
+                    }
+
+                    String loggedLecturerId = SharedPreferenceHelper.getString(itemView.getContext(), Constant.LOGGED_LECTURER_ID);
+                    if (!loggedLecturerId.isEmpty()){
+                        intent = new Intent(itemView.getContext(), LecturerTaskDetailActivity.class);
+                    }
+
                     intent.putExtra(Constant.TASK_ID, studentTask.getTaskId());
                     intent.putExtra(Constant.STUDENT_ID, studentTask.getStudentId());
                     itemView.getContext().startActivity(intent);

@@ -14,4 +14,5 @@
     <color name="editTextBackground">#1A999696</color>
 
     <color name="myCommentBackground">#E0EDFD</color>
+    <color name="myCommentClose">#79ABEC</color>
 </resources>

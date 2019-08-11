@@ -1,17 +1,25 @@
 package com.project.thesisguidance.ui.student;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -19,6 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.project.thesisguidance.R;
 import com.project.thesisguidance.adapter.TaskAdapter;
+import com.project.thesisguidance.model.Student;
 import com.project.thesisguidance.model.StudentTask;
 import com.project.thesisguidance.ui.MainActivity;
 import com.project.thesisguidance.ui.student.AddTaskActivity;
@@ -45,6 +54,7 @@ public class TaskActivity extends AppCompatActivity {
 
         initView();
         getTaskByStudentId(studentId);
+        getStudentById(studentId);
     }
 
     private void initView() {
@@ -68,6 +78,8 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
 
+
+
         initTask();
     }
 
@@ -80,6 +92,14 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void getTaskByStudentId(final String studentId) {
+        final ProgressDialog dialog = new ProgressDialog(this); // this = YourActivity
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Loading");
+        dialog.setMessage("Loading. Please wait...");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("task")
                 .whereEqualTo("studentId", studentId)
@@ -88,6 +108,8 @@ public class TaskActivity extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        dialog.dismiss();
+
                         if (queryDocumentSnapshots != null){
                             ArrayList<StudentTask> studentTasks = new ArrayList<>();
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
@@ -106,6 +128,46 @@ public class TaskActivity extends AppCompatActivity {
     private void addTask(){
         Intent intent = new Intent(this, AddTaskActivity.class);
         startActivity(intent);
+    }
+
+
+    private void getStudentById(String studentId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query getStudentByIdQuery = db.collection("students")
+                .whereEqualTo(FieldPath.documentId(), studentId)
+                .limit(1);
+
+        getStudentByIdQuery.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null && task.getResult().size() > 0) {
+                                Student student = task.getResult().getDocuments().get(0).toObject(Student.class);
+                                if (student != null) {
+                                    bindUIStudent(student);
+                                }
+                            } else {
+                                Toast.makeText(TaskActivity.this, "Failed get student", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void bindUIStudent(Student student){
+        ImageButton buttonCloseMessage = findViewById(R.id.buttonCloseMessage);
+        buttonCloseMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findViewById(R.id.includeWelcome).setVisibility(View.GONE);
+            }
+        });
+
+        TextView tvUser  = findViewById(R.id.tvUserInfo);
+        tvUser.setText(student.getName() + " (" + student.getNpm() + ")");
     }
 
     @Override

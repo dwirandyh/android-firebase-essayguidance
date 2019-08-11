@@ -17,4 +17,5 @@
     <string name="type_a_message">Type a message</string>
     <string name="back">Back</string>
     <string name="download_attachment">Download</string>
+    <string name="welcome_back">Welcome Back</string>
 </resources>

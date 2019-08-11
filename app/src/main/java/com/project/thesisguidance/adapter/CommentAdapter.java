@@ -32,18 +32,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.TaskView
     private static int MY_MESSAGE = 1;
     private static int OTHER_MESSAGE = 0;
 
-    public CommentAdapter(Context context){
+    public CommentAdapter(Context context) {
         this.context = context;
     }
 
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == MY_MESSAGE){
+        if (viewType == MY_MESSAGE) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_my_comment, parent, false);
             return new TaskViewHolder(itemView);
-        }else{
+        } else {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_comment, parent, false);
             return new TaskViewHolder(itemView);
@@ -69,11 +69,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.TaskView
     public int getItemViewType(int position) {
         Comment comment = comments.get(position);
         String loggedStudentId = SharedPreferenceHelper.getString(context, Constant.LOGGED_STUDENT_ID);
-        if (comment.getStudentId().equals(loggedStudentId)){
-            return MY_MESSAGE;
-        }else{
-            return OTHER_MESSAGE;
+        if (!loggedStudentId.isEmpty()) {
+            if (comment.getStudentId().equals(loggedStudentId)) {
+                return MY_MESSAGE;
+            }
         }
+
+        String loggedLecturerId = SharedPreferenceHelper.getString(context, Constant.LOGGED_LECTURER_ID);
+        if (!loggedLecturerId.isEmpty()) {
+            if (comment.getLecturerId().equals(loggedLecturerId)) {
+                return MY_MESSAGE;
+            }
+        }
+        return OTHER_MESSAGE;
+
     }
 
     @Override
