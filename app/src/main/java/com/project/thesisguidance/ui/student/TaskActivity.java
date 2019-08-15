@@ -79,7 +79,6 @@ public class TaskActivity extends AppCompatActivity {
         });
 
 
-
         initTask();
     }
 
@@ -105,27 +104,30 @@ public class TaskActivity extends AppCompatActivity {
                 .whereEqualTo("studentId", studentId)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 // event when document change for real time use
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         dialog.dismiss();
-
-                        if (queryDocumentSnapshots != null){
-                            ArrayList<StudentTask> studentTasks = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                StudentTask studentTask = document.toObject(StudentTask.class);
-                                studentTask.setTaskId(document.getId());
-                                studentTasks.add(studentTask);
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null && task.getResult().size() > 0) {
+                                ArrayList<StudentTask> studentTasks = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    StudentTask studentTask = document.toObject(StudentTask.class);
+                                    studentTask.setTaskId(document.getId());
+                                    studentTasks.add(studentTask);
+                                }
+                                adapter.setStudentTasks(studentTasks);
                             }
-                            adapter.setStudentTasks(studentTasks);
                         }else{
-                            Log.w(TAG, "No Task for student id "+ studentId);
+                            String errorMessage = task.getException().getMessage();
+                            Log.e(TAG, errorMessage);
                         }
                     }
                 });
     }
 
-    private void addTask(){
+    private void addTask() {
         Intent intent = new Intent(this, AddTaskActivity.class);
         startActivity(intent);
     }
@@ -157,7 +159,7 @@ public class TaskActivity extends AppCompatActivity {
                 });
     }
 
-    private void bindUIStudent(Student student){
+    private void bindUIStudent(Student student) {
         ImageButton buttonCloseMessage = findViewById(R.id.buttonCloseMessage);
         buttonCloseMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +168,7 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
 
-        TextView tvUser  = findViewById(R.id.tvUserInfo);
+        TextView tvUser = findViewById(R.id.tvUserInfo);
         tvUser.setText(student.getName() + " (" + student.getNpm() + ")");
     }
 
