@@ -1,7 +1,6 @@
 package com.project.thesisguidance.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.thesisguidance.R;
-import com.project.thesisguidance.model.Comment;
-import com.project.thesisguidance.model.StudentTask;
-import com.project.thesisguidance.ui.student.TaskDetailActivity;
+import com.project.thesisguidance.model.ChatBimbingan;
 import com.project.thesisguidance.utils.Constant;
 import com.project.thesisguidance.utils.SharedPreferenceHelper;
 
@@ -24,10 +21,10 @@ import java.util.Locale;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.TaskViewHolder> {
 
-    private static String TAG = "TaskAdapter";
+    private static String TAG = "GuidanceAdapter";
 
     private Context context;
-    private ArrayList<Comment> comments = new ArrayList<>();
+    private ArrayList<ChatBimbingan> chatBimbingans = new ArrayList<>();
 
     private static int MY_MESSAGE = 1;
     private static int OTHER_MESSAGE = 0;
@@ -52,13 +49,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.TaskView
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Comment comment = comments.get(position);
-        holder.tvName.setText(comment.getName());
-        holder.tvComment.setText(comment.getComment());
+        ChatBimbingan chatBimbingan = chatBimbingans.get(position);
+        holder.tvName.setText(chatBimbingan.getNama());
+        holder.tvComment.setText(chatBimbingan.getIsi_chat());
 
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
-            String dateString = simpleDateFormat.format(comment.getCreatedAt().toDate());
+            String dateString = simpleDateFormat.format(chatBimbingan.getTanggal().toDate());
             holder.tvDate.setText(dateString);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
@@ -67,17 +64,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.TaskView
 
     @Override
     public int getItemViewType(int position) {
-        Comment comment = comments.get(position);
+        ChatBimbingan chatBimbingan = chatBimbingans.get(position);
         String loggedStudentId = SharedPreferenceHelper.getString(context, Constant.LOGGED_STUDENT_ID);
         if (!loggedStudentId.isEmpty()) {
-            if (comment.getStudentId().equals(loggedStudentId)) {
+            if (chatBimbingan.getNpm().equals(loggedStudentId)) {
                 return MY_MESSAGE;
             }
         }
 
         String loggedLecturerId = SharedPreferenceHelper.getString(context, Constant.LOGGED_LECTURER_ID);
         if (!loggedLecturerId.isEmpty()) {
-            if (comment.getLecturerId().equals(loggedLecturerId)) {
+            if (chatBimbingan.getNik().equals(loggedLecturerId)) {
                 return MY_MESSAGE;
             }
         }
@@ -87,11 +84,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.TaskView
 
     @Override
     public int getItemCount() {
-        return comments.size();
+        return chatBimbingans.size();
     }
 
-    public void setComments(ArrayList<Comment> comments) {
-        this.comments = comments;
+    public void setChatBimbingans(ArrayList<ChatBimbingan> chatBimbingans) {
+        this.chatBimbingans = chatBimbingans;
         notifyDataSetChanged();
     }
 

@@ -1,16 +1,16 @@
 package com.project.thesisguidance.model;
 
 public class Lecturer {
-    private String name;
+    private String nama_dosen;
     private String nik;
     private String password;
 
-    public String getName() {
-        return name;
+    public String getNama_dosen() {
+        return nama_dosen;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNama_dosen(String nama_dosen) {
+        this.nama_dosen = nama_dosen;
     }
 
     public String getNik() {

@@ -39,10 +39,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.project.thesisguidance.R;
 import com.project.thesisguidance.adapter.CommentAdapter;
-import com.project.thesisguidance.model.Comment;
+import com.project.thesisguidance.model.ChatBimbingan;
 import com.project.thesisguidance.model.Lecturer;
-import com.project.thesisguidance.model.Student;
-import com.project.thesisguidance.model.StudentTask;
+import com.project.thesisguidance.model.Mahasiswa;
+import com.project.thesisguidance.model.Bimbingan;
 import com.project.thesisguidance.utils.Constant;
 import com.project.thesisguidance.utils.SharedPreferenceHelper;
 
@@ -56,7 +56,7 @@ import javax.annotation.Nullable;
 
 public class LecturerTaskDetailActivity extends AppCompatActivity {
 
-    private static String TAG = "TaskDetailActivity";
+    private static String TAG = "GuidanceDetailActivity";
     private String taskId;
     private String lecturerId;
     private String taskDocumentPath;
@@ -66,6 +66,7 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
 
     private Lecturer lecturer = new Lecturer();
     private ArrayList<String> statusList;
+    private Mahasiswa mahasiswa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lecturer_task_detail);
 
 
-        taskId = getIntent().getStringExtra(Constant.TASK_ID);
+        taskId = getIntent().getStringExtra(Constant.GUIDANCE_ID);
         getTaskById(taskId);
         getCommentByTaskId(taskId);
 
@@ -116,21 +117,21 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
 
     private void addComment() {
         Map<String, Object> comment = new HashMap<>();
-        comment.put("comment", textInputComment.getEditText().getText().toString());
-        comment.put("createdAt", FieldValue.serverTimestamp());
-        comment.put("studentId", "");
-        comment.put("name", lecturer.getName());
-        comment.put("lecturerId", lecturerId);
-        comment.put("taskId", taskId);
+        comment.put("isi_chat", textInputComment.getEditText().getText().toString());
+        comment.put("tanggal", FieldValue.serverTimestamp());
+        comment.put("nik", SharedPreferenceHelper.getString(this, Constant.LOGGED_LECTURER_ID));
+        comment.put("nama", lecturer.getNama_dosen());
+        comment.put("npm", "");
+        comment.put("id_bimbingan", taskId);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("comments")
+        db.collection("chat_bimbingan")
                 .add(comment)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         String documentId = documentReference.getId();
-                        Log.d(TAG, "DocumentSnapshot Writer with ID : " + documentId);
+                        Log.d(TAG, "DocumentSnapshot Writter with ID : " + documentId);
                         textInputComment.getEditText().setText("");
                     }
                 })
@@ -153,7 +154,7 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
         dialog.show();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query getTaskByIdQuery = db.collection("task")
+        Query getTaskByIdQuery = db.collection("bimbingan")
                 .whereEqualTo(FieldPath.documentId(), taskId)
                 .limit(1);
 
@@ -165,13 +166,13 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
                             if (task.getResult() != null && task.getResult().size() > 0) {
                                 dialog.dismiss();
 
-                                StudentTask studentTask = task.getResult().getDocuments().get(0).toObject(StudentTask.class);
+                                Bimbingan studentTask = task.getResult().getDocuments().get(0).toObject(Bimbingan.class);
                                 if (studentTask != null) {
                                     taskDocumentPath = task.getResult().getDocuments().get(0).getReference().getPath();
                                     bindUIStudentTask(studentTask);
                                 }
                             } else {
-                                Toast.makeText(LecturerTaskDetailActivity.this, "Failed get student task", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LecturerTaskDetailActivity.this, "Failed get task", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
@@ -180,7 +181,7 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
                 });
     }
 
-    private void bindUIStudentTask(final StudentTask studentTask) {
+    private void bindUIStudentTask(final Bimbingan studentTask) {
         TextView tvTaskName = findViewById(R.id.tvTaskName);
         TextView tvDate = findViewById(R.id.tvDate);
         Spinner spinnerStatus = findViewById(R.id.spinnerStatus);
@@ -191,26 +192,26 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
         Button buttonDownloadAttachment = findViewById(R.id.buttonDownloadAttachment);
 
 
-        tvTaskName.setText(studentTask.getTaskName());
-        if (studentTask.getStatus().equals(Constant.ON_PROGRESS)){
+        tvTaskName.setText(studentTask.getBab());
+        if (studentTask.getStatus_bab().equals(Constant.ON_PROGRESS)){
             spinnerStatus.setSelection(0);
-        }else if (studentTask.getStatus().equals(Constant.ACC)){
+        }else if (studentTask.getStatus_bab().equals(Constant.ACC)){
             spinnerStatus.setSelection(1);
         }
-        tvDescription.setText(studentTask.getDescription());
+        tvDescription.setText(studentTask.getKeterangan_bab());
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy HH:mm:ss", Locale.US);
-        String dateString = simpleDateFormat.format(studentTask.getCreatedAt().toDate());
+        String dateString = simpleDateFormat.format(studentTask.getTgl_kirim().toDate());
         tvDate.setText(dateString);
 
-        if (!studentTask.getAttachmentUrl().isEmpty()) {
+        if (!studentTask.getUrl_dokumen().isEmpty()) {
             buttonDownloadAttachment.setVisibility(View.VISIBLE);
             tvAttachmentStatus.setText(getResources().getString(R.string.attachment));
 
             buttonDownloadAttachment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Uri uri = Uri.parse(studentTask.getAttachmentUrl());
+                    Uri uri = Uri.parse(studentTask.getUrl_dokumen());
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 }
@@ -220,7 +221,7 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
         spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                studentTask.setStatus(statusList.get(i));
+                studentTask.setStatus_bab(statusList.get(i));
                 updateStudentTask(studentTask);
             }
 
@@ -242,9 +243,9 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
     }
 
-    private void updateStudentTask(StudentTask studentTask){
+    private void updateStudentTask(Bimbingan studentTask){
         HashMap<String, Object> studentTaskDocument = new HashMap<>();
-        studentTaskDocument.put("status", studentTask.getStatus());
+        studentTaskDocument.put("status", studentTask.getStatus_bab());
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.document(taskDocumentPath)
@@ -252,21 +253,21 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "Student Task Updated");
+                        Log.i(TAG, "Mahasiswa Task Updated");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Student Task failed to update");
+                        Log.e(TAG, "Mahasiswa Task failed to update");
                     }
                 });
     }
 
     private void getStudentById(String studentId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query getStudentByIdQuery = db.collection("students")
-                .whereEqualTo(FieldPath.documentId(), studentId)
+        Query getStudentByIdQuery = db.collection("mahasiswa")
+                .whereEqualTo("npm", studentId)
                 .limit(1);
 
         getStudentByIdQuery.get()
@@ -275,9 +276,9 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult() != null && task.getResult().size() > 0) {
-                                Student student = task.getResult().getDocuments().get(0).toObject(Student.class);
-                                if (student != null) {
-                                    bindUIStudent(student);
+                                mahasiswa = task.getResult().getDocuments().get(0).toObject(Mahasiswa.class);
+                                if (mahasiswa != null) {
+                                    bindUIStudent(mahasiswa);
                                 }
                             } else {
                                 Toast.makeText(LecturerTaskDetailActivity.this, "Failed get student", Toast.LENGTH_SHORT).show();
@@ -289,19 +290,19 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
                 });
     }
 
-    private void bindUIStudent(Student student) {
+    private void bindUIStudent(Mahasiswa mahasiswa) {
         TextView tvToolbarTitle = findViewById(R.id.tvToolbarTitle);
         TextView tvToolbarSubtitle = findViewById(R.id.tvToolbarSubtitle);
 
-        tvToolbarTitle.setText(student.getName());
-        tvToolbarSubtitle.setText(student.getNpm());
+        tvToolbarTitle.setText(mahasiswa.getNama());
+        tvToolbarSubtitle.setText(mahasiswa.getNpm());
     }
 
     private void getCommentByTaskId(final String taskId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("comments")
+        db.collection("chat_bimbingan")
                 //.whereEqualTo("taskId", taskId)
-                .orderBy("createdAt", Query.Direction.ASCENDING)
+                .orderBy("tanggal", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -311,28 +312,28 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
                         }
 
                         for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
-                            ArrayList<Comment> comments = new ArrayList<>();
+                            ArrayList<ChatBimbingan> chatBimbingans = new ArrayList<>();
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                Comment comment = document.toObject(Comment.class);
-                                if (comment.getTaskId().equals(taskId)){
-                                    comment.setTaskId(document.getId());
-                                    comments.add(comment);
+                                ChatBimbingan chatBimbingan = document.toObject(ChatBimbingan.class);
+                                if (chatBimbingan.getId_bimbingan().equals(taskId)){
+                                    //chatBimbingan.setTaskId(document.getId());
+                                    chatBimbingans.add(chatBimbingan);
                                 }
                             }
-                            bindUIComments(comments);
+                            bindUIComments(chatBimbingans);
                         }
                     }
                 });
     }
 
-    private void bindUIComments(ArrayList<Comment> comments) {
+    private void bindUIComments(ArrayList<ChatBimbingan> chatBimbingans) {
         RecyclerView rvComment = findViewById(R.id.rvComment);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvComment.setLayoutManager(linearLayoutManager);
         rvComment.setNestedScrollingEnabled(false);
 
         CommentAdapter adapter = new CommentAdapter(this);
-        adapter.setComments(comments);
+        adapter.setChatBimbingans(chatBimbingans);
         rvComment.setAdapter(adapter);
 
         nestedScrollView.post(new Runnable() {
@@ -344,13 +345,13 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void getLecturerById(String lecturerId){
+    private void getLecturerById(String nik){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query getStudentByIdQuery = db.collection("lecturers")
-                .whereEqualTo(FieldPath.documentId(), lecturerId)
+        Query getLecturerByIdQuery = db.collection("dosen")
+                .whereEqualTo("nik", nik)
                 .limit(1);
 
-        getStudentByIdQuery.get()
+        getLecturerByIdQuery.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -358,7 +359,7 @@ public class LecturerTaskDetailActivity extends AppCompatActivity {
                             if (task.getResult() != null && task.getResult().size() > 0) {
                                 lecturer = task.getResult().getDocuments().get(0).toObject(Lecturer.class);
                             } else {
-                                Toast.makeText(LecturerTaskDetailActivity.this, "Failed get student", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LecturerTaskDetailActivity.this, "Failed Get Lecturer Data", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());

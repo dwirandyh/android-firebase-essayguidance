@@ -91,7 +91,7 @@ public class StudentLoginActivity extends AppCompatActivity {
         dialog.show();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query loginQuery = db.collection("students")
+        Query loginQuery = db.collection("mahasiswa")
                 .whereEqualTo("npm", npm)
                 .whereEqualTo("password", password);
 
@@ -103,9 +103,8 @@ public class StudentLoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             if (task.getResult() != null && task.getResult().size() > 0) {
 
-                                String studentId = task.getResult().getDocuments().get(0).getId();
-                                String lecturerId = task.getResult().getDocuments().get(0).getString("lecturerId");
-                                saveLoginSession(studentId, lecturerId);
+                                String studentId = task.getResult().getDocuments().get(0).getString("npm");
+                                saveLoginSession(studentId);
                                 openTaskActivity();
                             } else {
                                 Toast.makeText(StudentLoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
@@ -117,14 +116,13 @@ public class StudentLoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveLoginSession(String studentId, String lecturerId) {
+    private void saveLoginSession(String studentId) {
         SharedPreferenceHelper.putString(this, Constant.LOGGED_STUDENT_ID, studentId);
         SharedPreferenceHelper.putString(this, Constant.STUDENT_ID, studentId);
-        SharedPreferenceHelper.putString(this, Constant.LECTURER_ID, lecturerId);
     }
 
     private void openTaskActivity() {
-        Intent intent = new Intent(StudentLoginActivity.this, TaskActivity.class);
+        Intent intent = new Intent(StudentLoginActivity.this, GuidanceActivity.class);
         startActivity(intent);
     }
 }

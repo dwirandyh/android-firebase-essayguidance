@@ -7,9 +7,13 @@ public class Constant {
     public static String LECTURER_ID = "LECTURER_ID";
     public static String LOGGED_STUDENT_ID = "LOGGED_STUDENT_ID";
     public static String STUDENT_ID = "STUDENT_ID";
+    public static String ID_SKRIPSI = "ID_SKRIPSI";
 
-    public static String TASK_ID = "EXTRA_TASK_ID";
+    public static String GUIDANCE_ID = "EXTRA_GUIDANCE_ID";
 
-    public static String ON_PROGRESS = "On Progress";
+    public static String ON_PROGRESS = "Bimbingan";
     public static String ACC = "ACC";
+
+    public static int REQUEST_ADD_GUIDANCE = 100;
+
 }

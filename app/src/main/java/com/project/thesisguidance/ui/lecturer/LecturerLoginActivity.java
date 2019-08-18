@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -20,8 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.project.thesisguidance.R;
-import com.project.thesisguidance.ui.student.StudentLoginActivity;
-import com.project.thesisguidance.ui.student.TaskActivity;
 import com.project.thesisguidance.utils.Constant;
 import com.project.thesisguidance.utils.SharedPreferenceHelper;
 
@@ -84,7 +81,7 @@ public class LecturerLoginActivity extends AppCompatActivity {
         dialog.show();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query loginQuery = db.collection("lecturers")
+        Query loginQuery = db.collection("dosen")
                 .whereEqualTo("nik", npm)
                 .whereEqualTo("password", password);
 
@@ -96,7 +93,7 @@ public class LecturerLoginActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             if (task.getResult() != null && task.getResult().size() > 0) {
-                                String lecturerId = task.getResult().getDocuments().get(0).getId();
+                                String lecturerId = task.getResult().getDocuments().get(0).getString("nik");
                                 saveLoginSession(lecturerId);
                                 openTaskActivity();
                             } else {

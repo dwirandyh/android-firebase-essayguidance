@@ -12,10 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.lecturer.LecturerTaskActivity"/>
-        <activity android:name=".ui.student.TaskDetailActivity" />
-        <activity android:name=".ui.student.AddTaskActivity" />
-        <activity android:name=".ui.student.TaskActivity" />
+        <activity android:name=".ui.student.AddThesisActivity"></activity>
+        <activity android:name=".ui.lecturer.LecturerTaskActivity" />
+        <activity android:name=".ui.student.GuidanceDetailActivity" />
+        <activity android:name=".ui.student.AddGuidanceActivity" />
+        <activity android:name=".ui.student.GuidanceActivity" />
         <activity android:name=".ui.lecturer.LecturerLoginActivity" />
         <activity android:name=".ui.lecturer.LecturerTaskDetailActivity" />
         <activity android:name=".ui.student.StudentLoginActivity" />

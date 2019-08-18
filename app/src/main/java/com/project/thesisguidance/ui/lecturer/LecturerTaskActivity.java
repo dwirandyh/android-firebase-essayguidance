@@ -17,34 +17,25 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.project.thesisguidance.R;
-import com.project.thesisguidance.adapter.TaskAdapter;
+import com.project.thesisguidance.adapter.GuidanceAdapter;
 import com.project.thesisguidance.model.Lecturer;
-import com.project.thesisguidance.model.Student;
-import com.project.thesisguidance.model.StudentTask;
+import com.project.thesisguidance.model.Bimbingan;
 import com.project.thesisguidance.ui.MainActivity;
-import com.project.thesisguidance.ui.student.TaskActivity;
 import com.project.thesisguidance.utils.Constant;
 import com.project.thesisguidance.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
-
 public class LecturerTaskActivity extends AppCompatActivity {
 
     private RecyclerView rvTask;
-    private TaskAdapter adapter = new TaskAdapter();
+    private GuidanceAdapter adapter = new GuidanceAdapter();
     private String TAG = "LecturerTaskActivity";
     private String lecturerId;
 
@@ -85,7 +76,7 @@ public class LecturerTaskActivity extends AppCompatActivity {
         rvTask.setAdapter(adapter);
     }
 
-    private void getTaskByLecturerId(final String lecturerId) {
+    private void getTaskByLecturerId(final String nik) {
         final ProgressDialog dialog = new ProgressDialog(this); // this = YourActivity
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setTitle("Loading");
@@ -95,9 +86,9 @@ public class LecturerTaskActivity extends AppCompatActivity {
         dialog.show();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("task")
-                .whereEqualTo("lecturerId", lecturerId)
-                .orderBy("createdAt", Query.Direction.DESCENDING)
+        db.collection("bimbingan")
+                .whereEqualTo("nik", nik)
+                //.orderBy("createdAt", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -106,10 +97,10 @@ public class LecturerTaskActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             if (task.getResult() != null && task.getResult().size() > 0) {
-                                ArrayList<StudentTask> studentTasks = new ArrayList<>();
+                                ArrayList<Bimbingan> studentTasks = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    StudentTask studentTask = document.toObject(StudentTask.class);
-                                    studentTask.setTaskId(document.getId());
+                                    Bimbingan studentTask = document.toObject(Bimbingan.class);
+                                    studentTask.setId_bimbingan(document.getId());
                                     studentTasks.add(studentTask);
                                 }
                                 adapter.setStudentTasks(studentTasks);
@@ -133,8 +124,8 @@ public class LecturerTaskActivity extends AppCompatActivity {
 
     private void getLecturerById(String lecturerId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query getStudentByIdQuery = db.collection("lecturers")
-                .whereEqualTo(FieldPath.documentId(), lecturerId)
+        Query getStudentByIdQuery = db.collection("dosen")
+                .whereEqualTo("nik", lecturerId)
                 .limit(1);
 
         getStudentByIdQuery.get()
@@ -165,7 +156,7 @@ public class LecturerTaskActivity extends AppCompatActivity {
         });
 
         TextView tvUser  = findViewById(R.id.tvUserInfo);
-        tvUser.setText(lecturer.getName() + " (" + lecturer.getNik() + ")");
+        tvUser.setText(lecturer.getNama_dosen() + " (" + lecturer.getNik() + ")");
     }
 
 

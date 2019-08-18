@@ -10,8 +10,8 @@ import android.widget.Button;
 import com.project.thesisguidance.R;
 import com.project.thesisguidance.ui.lecturer.LecturerLoginActivity;
 import com.project.thesisguidance.ui.lecturer.LecturerTaskActivity;
+import com.project.thesisguidance.ui.student.GuidanceActivity;
 import com.project.thesisguidance.ui.student.StudentLoginActivity;
-import com.project.thesisguidance.ui.student.TaskActivity;
 import com.project.thesisguidance.utils.Constant;
 import com.project.thesisguidance.utils.SharedPreferenceHelper;
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkLoginState(){
         String loggedStudent = SharedPreferenceHelper.getString(this, Constant.LOGGED_STUDENT_ID);
         if (!loggedStudent.isEmpty()){
-            Intent intent = new Intent(this, TaskActivity.class);
+            Intent intent = new Intent(this, GuidanceActivity.class);
             startActivity(intent);
         }
 

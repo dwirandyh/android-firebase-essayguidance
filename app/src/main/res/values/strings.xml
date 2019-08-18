@@ -1,21 +1,23 @@
 <resources>
-    <string name="app_name">Essay Guidance</string>
+    <string name="app_name">Bimbingan Skripsi</string>
 
-    <string name="add_task">Add Task</string>
-    <string name="add_task_subtitle">Make sure all information entered in the assignment form is filled in correctly</string>
-    <string name="task_name">Task Name</string>
-    <string name="task_description">Task Description</string>
-    <string name="task_file_url">Task File Url</string>
-    <string name="submit_task">Submit Task</string>
-    <string name="lecturer_login_subtitle">Please enter your NPM and password to access your account</string>
-    <string name="lecturer_login_title">Login As Lecturer</string>
-    <string name="sign_in">Sign In</string>
-    <string name="npm">Your NPM</string>
+    <string name="add_task">Buat Topic Bimbingan</string>
+    <string name="add_task_subtitle">Pastikan semua informasi yang anda masukan benar</string>
+    <string name="task_name">BAB</string>
+    <string name="task_description">Keterangan</string>
+    <string name="task_file_url">File URL</string>
+    <string name="submit_task">Simpan Data</string>
+    <string name="lecturer_login_subtitle">Masukan NIK dan Password untuk mengakses akun anda</string>
+    <string name="lecturer_login_title">Login Sebagai Dosen</string>
+    <string name="sign_in">Login</string>
+    <string name="npm">NPM Anda</string>
     <string name="password">Password</string>
-    <string name="nik">Your NIK</string>
-    <string name="attachment">Attachment</string>
-    <string name="type_a_message">Type a message</string>
+    <string name="nik">NIK Anda</string>
+    <string name="attachment">Lampiran</string>
+    <string name="type_a_message">Ketikan sesuatu</string>
     <string name="back">Back</string>
     <string name="download_attachment">Download</string>
-    <string name="welcome_back">Welcome Back</string>
+    <string name="welcome_back">Selamat Datang</string>
+    <string name="add_thesis">Ajukan Judul Skripsi/TA</string>
+    <string name="permasalahan_yang_dibahas">Permasalahan yang dibahas</string>
 </resources>
