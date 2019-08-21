@@ -44,10 +44,14 @@ public class GuidanceActivity extends AppCompatActivity {
     GuidanceAdapter adapter = new GuidanceAdapter();
 
     FloatingActionButton buttonAddTask;
-    LinearLayout layoutThesis;
+    LinearLayout layoutAddThesis;
 
     ProgressDialog dialog;
     RecyclerView rvTask;
+
+    View layoutThesis;
+
+
 
 
     @Override
@@ -83,7 +87,10 @@ public class GuidanceActivity extends AppCompatActivity {
             }
         });
 
-        layoutThesis = findViewById(R.id.layoutAddThesis);
+        layoutAddThesis = findViewById(R.id.layoutAddThesis);
+        layoutAddThesis.setVisibility(View.INVISIBLE);
+
+        layoutThesis = findViewById(R.id.layoutThesis);
         layoutThesis.setVisibility(View.INVISIBLE);
 
         Button btnAddThesis = findViewById(R.id.btnAddThesis);
@@ -109,7 +116,7 @@ public class GuidanceActivity extends AppCompatActivity {
 
     private void addThesisActivity(){
         Intent intent = new Intent(this, AddThesisActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, Constant.REQUEST_ADD_THESIS);
     }
 
     private void getSkripsiByNpm(String npm) {
@@ -132,23 +139,28 @@ public class GuidanceActivity extends AppCompatActivity {
                             if (task.getResult() != null && task.getResult().size() > 0){
                                 skripsi = task.getResult().getDocuments().get(0).toObject(Skripsi.class);
 
-                                String idSkripsi = task.getResult().getDocuments().get(0).getId();
-                                skripsi.setId_skripsi(idSkripsi);
+                                if (skripsi.getStatus().equals(Constant.PENDING)){
+                                    dialog.dismiss();
+                                    bindThesisUI(skripsi);
+                                }else{
+                                    String idSkripsi = task.getResult().getDocuments().get(0).getId();
+                                    skripsi.setId_skripsi(idSkripsi);
 
-                                SharedPreferenceHelper.putString(GuidanceActivity.this, Constant.ID_SKRIPSI, idSkripsi);
+                                    SharedPreferenceHelper.putString(GuidanceActivity.this, Constant.ID_SKRIPSI, idSkripsi);
 
-                                getBimbinganByIdSkripsi(idSkripsi, skripsi.getNik(), skripsi.getNpm());
+                                    getBimbinganByIdSkripsi(idSkripsi, skripsi.getNik(), skripsi.getNpm());
+                                }
                             }else{
                                 dialog.dismiss();
 
                                 rvTask.setVisibility(View.INVISIBLE);
-                                layoutThesis.setVisibility(View.VISIBLE);
+                                layoutAddThesis.setVisibility(View.VISIBLE);
                             }
                         } else {
                             dialog.dismiss();
 
                             rvTask.setVisibility(View.INVISIBLE);
-                            layoutThesis.setVisibility(View.VISIBLE);
+                            layoutAddThesis.setVisibility(View.VISIBLE);
                             String errorMessage = task.getException().getMessage();
                             Log.e(TAG, errorMessage);
                         }
@@ -156,9 +168,28 @@ public class GuidanceActivity extends AppCompatActivity {
                 });
     }
 
+    private void bindThesisUI(Skripsi skripsi){
+        buttonAddTask.setVisibility(View.INVISIBLE);
+        layoutThesis.setVisibility(View.VISIBLE);
+        layoutAddThesis.setVisibility(View.INVISIBLE);
+
+        TextView tvTitle = findViewById(R.id.tvTitle);
+        TextView tvSubtitle = findViewById(R.id.tvSubtitle);
+        TextView tvStatus = findViewById(R.id.tvStatus);
+        TextView tvDescription = findViewById(R.id.tvDescription);
+        TextView tvPembimbing = findViewById(R.id.tvPembimbing);
+
+        tvTitle.setText(skripsi.getJudul());
+        tvSubtitle.setText(skripsi.getJenis_skripsi());
+        tvStatus.setText(skripsi.getStatus());
+        tvDescription.setText(skripsi.getMasalah());
+        tvPembimbing.setText(skripsi.getNama_pembimbing() + " (" + skripsi.getNik() + ")");
+    }
+
     private void getBimbinganByIdSkripsi(final String idSkripsi, final String nik, final String npm) {
         rvTask.setVisibility(View.VISIBLE);
-        layoutThesis.setVisibility(View.INVISIBLE);
+        buttonAddTask.setVisibility(View.VISIBLE);
+        layoutAddThesis.setVisibility(View.INVISIBLE);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("bimbingan")
@@ -246,6 +277,13 @@ public class GuidanceActivity extends AppCompatActivity {
         if (requestCode == Constant.REQUEST_ADD_GUIDANCE){
             if (resultCode == RESULT_OK){
                 getBimbinganByIdSkripsi(skripsi.getId_skripsi(), skripsi.getNik(), skripsi.getNpm());
+            }
+        }
+
+        if (requestCode == Constant.REQUEST_ADD_THESIS){
+            if (resultCode == RESULT_OK){
+                String npm = SharedPreferenceHelper.getString(this, Constant.STUDENT_ID);
+                getSkripsiByNpm(npm);
             }
         }
     }

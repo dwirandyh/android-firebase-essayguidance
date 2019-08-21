@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.thesisguidance.R;
 import com.project.thesisguidance.model.Bimbingan;
-import com.project.thesisguidance.ui.lecturer.LecturerTaskDetailActivity;
+import com.project.thesisguidance.ui.lecturer.LecturerGuidanceDetailActivity;
 import com.project.thesisguidance.ui.student.GuidanceDetailActivity;
 import com.project.thesisguidance.utils.Constant;
 import com.project.thesisguidance.utils.SharedPreferenceHelper;
@@ -70,8 +70,8 @@ public class GuidanceAdapter extends RecyclerView.Adapter<GuidanceAdapter.TaskVi
         TaskViewHolder(@NonNull final View itemView) {
             super(itemView);
 
-            tvTaskName = itemView.findViewById(R.id.tvTaskName);
-            tvDate = itemView.findViewById(R.id.tvDate);
+            tvTaskName = itemView.findViewById(R.id.tvTitle);
+            tvDate = itemView.findViewById(R.id.tvSubtitle);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvDescription = itemView.findViewById(R.id.tvDescription);
 
@@ -90,7 +90,7 @@ public class GuidanceAdapter extends RecyclerView.Adapter<GuidanceAdapter.TaskVi
 
                     String loggedLecturerId = SharedPreferenceHelper.getString(itemView.getContext(), Constant.LOGGED_LECTURER_ID);
                     if (!loggedLecturerId.isEmpty()){
-                        intent = new Intent(itemView.getContext(), LecturerTaskDetailActivity.class);
+                        intent = new Intent(itemView.getContext(), LecturerGuidanceDetailActivity.class);
                     }
 
                     intent.putExtra(Constant.GUIDANCE_ID, guidance.getId_bimbingan());

@@ -102,7 +102,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.TaskView
 
             tvName = itemView.findViewById(R.id.tvName);
             tvComment = itemView.findViewById(R.id.tvComment);
-            tvDate = itemView.findViewById(R.id.tvDate);
+            tvDate = itemView.findViewById(R.id.tvSubtitle);
         }
     }
 }

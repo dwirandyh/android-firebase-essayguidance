@@ -13,7 +13,10 @@ public class Constant {
 
     public static String ON_PROGRESS = "Bimbingan";
     public static String ACC = "ACC";
+    public static String PENDING = "Pending";
+    public static String DITERIMA = "Diterima";
 
     public static int REQUEST_ADD_GUIDANCE = 100;
+    public static int REQUEST_ADD_THESIS = 101;
 
 }

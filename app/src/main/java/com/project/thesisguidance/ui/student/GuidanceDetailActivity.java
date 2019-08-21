@@ -170,8 +170,8 @@ public class GuidanceDetailActivity extends AppCompatActivity {
     }
 
     private void bindUIStudentTask(final Bimbingan studentTask) {
-        TextView tvTaskName = findViewById(R.id.tvTaskName);
-        TextView tvDate = findViewById(R.id.tvDate);
+        TextView tvTaskName = findViewById(R.id.tvTitle);
+        TextView tvDate = findViewById(R.id.tvSubtitle);
         TextView tvStatus = findViewById(R.id.tvStatus);
         TextView tvDescription = findViewById(R.id.tvDescription);
         TextView tvAttachmentStatus = findViewById(R.id.tvAttachmentStatus);

@@ -25,7 +25,7 @@
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintEnd_toStartOf="@+id/tvDate"
+            app:layout_constraintEnd_toStartOf="@+id/tvSubtitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Name" />
@@ -46,7 +46,7 @@
             tools:text="Text Comment" />
 
         <TextView
-            android:id="@+id/tvDate"
+            android:id="@+id/tvSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"

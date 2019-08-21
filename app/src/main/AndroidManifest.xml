@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.project.thesisguidance">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -12,13 +10,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.student.AddThesisActivity"></activity>
-        <activity android:name=".ui.lecturer.LecturerTaskActivity" />
+        <activity android:name=".ui.lecturer.LecturerThesisDetailActivity"></activity>
+        <activity android:name=".ui.student.AddThesisActivity" />
+        <activity android:name=".ui.lecturer.LecturerGuidanceActivity" />
         <activity android:name=".ui.student.GuidanceDetailActivity" />
         <activity android:name=".ui.student.AddGuidanceActivity" />
         <activity android:name=".ui.student.GuidanceActivity" />
         <activity android:name=".ui.lecturer.LecturerLoginActivity" />
-        <activity android:name=".ui.lecturer.LecturerTaskDetailActivity" />
+        <activity android:name=".ui.lecturer.LecturerGuidanceDetailActivity" />
         <activity android:name=".ui.student.StudentLoginActivity" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
@@ -28,5 +27,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

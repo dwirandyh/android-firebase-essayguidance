@@ -112,7 +112,7 @@ public class LecturerLoginActivity extends AppCompatActivity {
     }
 
     private void openTaskActivity() {
-        Intent intent = new Intent(LecturerLoginActivity.this, LecturerTaskActivity.class);
+        Intent intent = new Intent(LecturerLoginActivity.this, LecturerGuidanceActivity.class);
         startActivity(intent);
     }
 }
