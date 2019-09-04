@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bimbingan Skripsi</string>
+    <string name="app_name">Bimbingan</string>
 
     <string name="add_task">Buat Topik Bimbingan</string>
     <string name="add_task_subtitle">Pastikan semua informasi yang anda masukan benar</string>

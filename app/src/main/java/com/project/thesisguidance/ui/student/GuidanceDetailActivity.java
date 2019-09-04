@@ -177,7 +177,12 @@ public class GuidanceDetailActivity extends AppCompatActivity {
         TextView tvAttachmentStatus = findViewById(R.id.tvAttachmentStatus);
         Button buttonDownloadAttachment = findViewById(R.id.buttonDownloadAttachment);
 
-        tvTaskName.setText(studentTask.getBab());
+        if (studentTask.getBab().length() <= 1){
+            tvTaskName.setText("BAB " + studentTask.getBab());
+        }else{
+            tvTaskName.setText(studentTask.getBab());
+        }
+
         tvStatus.setText(studentTask.getStatus_bab());
         tvDescription.setText(studentTask.getKeterangan_bab());
 

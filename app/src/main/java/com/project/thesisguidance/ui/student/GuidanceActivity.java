@@ -3,6 +3,7 @@ package com.project.thesisguidance.ui.student;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.project.thesisguidance.R;
 import com.project.thesisguidance.adapter.GuidanceAdapter;
+import com.project.thesisguidance.adapter.StudentGuidanceAdapter;
 import com.project.thesisguidance.model.Mahasiswa;
 import com.project.thesisguidance.model.Bimbingan;
 import com.project.thesisguidance.model.Skripsi;
@@ -41,17 +43,17 @@ public class GuidanceActivity extends AppCompatActivity {
 
     Skripsi skripsi = new Skripsi();
 
-    GuidanceAdapter adapter = new GuidanceAdapter();
+    StudentGuidanceAdapter adapter = new StudentGuidanceAdapter();
 
     FloatingActionButton buttonAddTask;
     LinearLayout layoutAddThesis;
+    CardView cardViewSkripsi;
+    CardView cardViewBimbingan;
 
     ProgressDialog dialog;
     RecyclerView rvTask;
 
     View layoutThesis;
-
-
 
 
     @Override
@@ -93,6 +95,12 @@ public class GuidanceActivity extends AppCompatActivity {
         layoutThesis = findViewById(R.id.layoutThesis);
         layoutThesis.setVisibility(View.INVISIBLE);
 
+        cardViewSkripsi = findViewById(R.id.cardViewSkripsi);
+        cardViewSkripsi.setVisibility(View.INVISIBLE);
+
+        cardViewBimbingan = findViewById(R.id.cardViewBimbingan);
+        cardViewBimbingan.setVisibility(View.INVISIBLE);
+
         Button btnAddThesis = findViewById(R.id.btnAddThesis);
         btnAddThesis.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +122,7 @@ public class GuidanceActivity extends AppCompatActivity {
         rvTask.setAdapter(adapter);
     }
 
-    private void addThesisActivity(){
+    private void addThesisActivity() {
         Intent intent = new Intent(this, AddThesisActivity.class);
         startActivityForResult(intent, Constant.REQUEST_ADD_THESIS);
     }
@@ -136,29 +144,33 @@ public class GuidanceActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            if (task.getResult() != null && task.getResult().size() > 0){
+                            if (task.getResult() != null && task.getResult().size() > 0) {
                                 skripsi = task.getResult().getDocuments().get(0).toObject(Skripsi.class);
 
-                                if (skripsi.getStatus().equals(Constant.PENDING)){
+                                if (skripsi.getStatus().equals(Constant.PENDING)) {
                                     dialog.dismiss();
                                     bindThesisUI(skripsi);
-                                }else{
+                                } else {
                                     String idSkripsi = task.getResult().getDocuments().get(0).getId();
                                     skripsi.setId_skripsi(idSkripsi);
 
                                     SharedPreferenceHelper.putString(GuidanceActivity.this, Constant.ID_SKRIPSI, idSkripsi);
 
+                                    bindAcceptedThesisUI(skripsi);
+
                                     getBimbinganByIdSkripsi(idSkripsi, skripsi.getNik(), skripsi.getNpm());
                                 }
-                            }else{
+                            } else {
                                 dialog.dismiss();
 
+                                buttonAddTask.setVisibility(View.INVISIBLE);
                                 rvTask.setVisibility(View.INVISIBLE);
                                 layoutAddThesis.setVisibility(View.VISIBLE);
                             }
                         } else {
                             dialog.dismiss();
 
+                            buttonAddTask.setVisibility(View.INVISIBLE);
                             rvTask.setVisibility(View.INVISIBLE);
                             layoutAddThesis.setVisibility(View.VISIBLE);
                             String errorMessage = task.getException().getMessage();
@@ -168,7 +180,23 @@ public class GuidanceActivity extends AppCompatActivity {
                 });
     }
 
-    private void bindThesisUI(Skripsi skripsi){
+    private void bindAcceptedThesisUI(Skripsi skripsi){
+        cardViewSkripsi.setVisibility(View.VISIBLE);
+        cardViewBimbingan.setVisibility(View.VISIBLE);
+        buttonAddTask.setVisibility(View.VISIBLE);
+        layoutThesis.setVisibility(View.INVISIBLE);
+        layoutAddThesis.setVisibility(View.VISIBLE);
+
+        TextView tvJudul = findViewById(R.id.tvJudul);
+        TextView tvPembimbing = findViewById(R.id.tvPembimbing);
+        tvJudul.setText(skripsi.getJudul());
+        tvPembimbing.setText(skripsi.getNama_pembimbing());
+    }
+
+
+    private void bindThesisUI(Skripsi skripsi) {
+        cardViewSkripsi.setVisibility(View.INVISIBLE);
+        cardViewBimbingan.setVisibility(View.INVISIBLE);
         buttonAddTask.setVisibility(View.INVISIBLE);
         layoutThesis.setVisibility(View.VISIBLE);
         layoutAddThesis.setVisibility(View.INVISIBLE);
@@ -179,7 +207,11 @@ public class GuidanceActivity extends AppCompatActivity {
         TextView tvDescription = findViewById(R.id.tvDescription);
         TextView tvPembimbing = findViewById(R.id.tvPembimbing);
 
-        tvTitle.setText(skripsi.getJudul());
+        if (skripsi.getJudul().length() <= 1){
+            tvTitle.setText("BAB " + skripsi.getJudul());
+        }else{
+            tvTitle.setText(skripsi.getJudul());
+        }
         tvSubtitle.setText(skripsi.getJenis_skripsi());
         tvStatus.setText(skripsi.getStatus());
         tvDescription.setText(skripsi.getMasalah());
@@ -187,6 +219,7 @@ public class GuidanceActivity extends AppCompatActivity {
     }
 
     private void getBimbinganByIdSkripsi(final String idSkripsi, final String nik, final String npm) {
+        cardViewBimbingan.setVisibility(View.VISIBLE);
         rvTask.setVisibility(View.VISIBLE);
         buttonAddTask.setVisibility(View.VISIBLE);
         layoutAddThesis.setVisibility(View.INVISIBLE);
@@ -257,16 +290,21 @@ public class GuidanceActivity extends AppCompatActivity {
     }
 
     private void bindUIStudent(Mahasiswa mahasiswa) {
-        ImageButton buttonCloseMessage = findViewById(R.id.buttonCloseMessage);
-        buttonCloseMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                findViewById(R.id.includeWelcome).setVisibility(View.GONE);
-            }
-        });
+//        ImageButton buttonCloseMessage = findViewById(R.id.buttonCloseMessage);
+//        buttonCloseMessage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //findViewById(R.id.includeWelcome).setVisibility(View.GONE);
+//            }
+//        });
 
-        TextView tvUser = findViewById(R.id.tvUserInfo);
-        tvUser.setText(mahasiswa.getNama() + " (" + mahasiswa.getNpm() + ")");
+        TextView tvNpm = findViewById(R.id.tvNpm);
+        TextView tvName = findViewById(R.id.tvName);
+        TextView tvSemester = findViewById(R.id.tvSemester);
+
+        tvNpm.setText(mahasiswa.getNpm());
+        tvName.setText(mahasiswa.getNama());
+        tvSemester.setText("" + mahasiswa.getSemester());
     }
 
 
@@ -274,14 +312,14 @@ public class GuidanceActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constant.REQUEST_ADD_GUIDANCE){
-            if (resultCode == RESULT_OK){
+        if (requestCode == Constant.REQUEST_ADD_GUIDANCE) {
+            if (resultCode == RESULT_OK) {
                 getBimbinganByIdSkripsi(skripsi.getId_skripsi(), skripsi.getNik(), skripsi.getNpm());
             }
         }
 
-        if (requestCode == Constant.REQUEST_ADD_THESIS){
-            if (resultCode == RESULT_OK){
+        if (requestCode == Constant.REQUEST_ADD_THESIS) {
+            if (resultCode == RESULT_OK) {
                 String npm = SharedPreferenceHelper.getString(this, Constant.STUDENT_ID);
                 getSkripsiByNpm(npm);
             }

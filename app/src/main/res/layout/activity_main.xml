@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/darmajaya_building_blur"
     tools:context=".ui.MainActivity">
+
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="260dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="44dp"
-        android:src="@drawable/ic_scrum_board_cesn"
+        android:src="@drawable/darmajaya_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,11 +25,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:text="Welcome to Ghostlamp"
+        android:text="SIBISTAON"
         android:textAlignment="center"
-        android:textColor="@color/textPrimary"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -38,19 +40,20 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="20dp"
         android:lineHeight="24dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:text="A workspace to over 12 Million Student/narround the global of the world"
+        android:text="Selamat Datang di SIBISTAON silahkan login untuk masuk ke dalam sistem"
         android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textMedium"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStudent"
@@ -62,22 +65,30 @@
         android:layout_marginEnd="16dp"
         android:text="Login Sebagai Mahasiswa"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLecture"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="@dimen/btnHeight"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_white_border"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Login Sebagai Dosen"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStudent" />
+        app:layout_constraintTop_toBottomOf="@+id/btnStudent"
+        >
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLecture"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btnHeight"
+            android:text="Login Sebagai Dosen"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

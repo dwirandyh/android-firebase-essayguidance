@@ -111,8 +111,6 @@ public class LecturerGuidanceDetailActivity extends AppCompatActivity {
                 addComment();
             }
         });
-
-
     }
 
     private void addComment() {
@@ -191,11 +189,15 @@ public class LecturerGuidanceDetailActivity extends AppCompatActivity {
         TextView tvAttachmentStatus = findViewById(R.id.tvAttachmentStatus);
         Button buttonDownloadAttachment = findViewById(R.id.buttonDownloadAttachment);
 
+        if (studentTask.getBab().length() <= 1) {
+            tvTaskName.setText("BAB " + studentTask.getBab());
+        } else {
+            tvTaskName.setText(studentTask.getBab());
+        }
 
-        tvTaskName.setText(studentTask.getBab());
-        if (studentTask.getStatus_bab().equals(Constant.ON_PROGRESS)){
+        if (studentTask.getStatus_bab().equals(Constant.ON_PROGRESS)) {
             spinnerStatus.setSelection(0);
-        }else if (studentTask.getStatus_bab().equals(Constant.ACC)){
+        } else if (studentTask.getStatus_bab().equals(Constant.ACC)) {
             spinnerStatus.setSelection(1);
         }
         tvDescription.setText(studentTask.getKeterangan_bab());
@@ -232,7 +234,7 @@ public class LecturerGuidanceDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void initSpinnerStatus(Spinner spinner){
+    private void initSpinnerStatus(Spinner spinner) {
         statusList = new ArrayList<>();
         statusList.add(Constant.ON_PROGRESS);
         statusList.add(Constant.ACC);
@@ -243,7 +245,7 @@ public class LecturerGuidanceDetailActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
     }
 
-    private void updateStudentTask(Bimbingan studentTask){
+    private void updateStudentTask(Bimbingan studentTask) {
         HashMap<String, Object> studentTaskDocument = new HashMap<>();
         studentTaskDocument.put("status_bab", studentTask.getStatus_bab());
 
@@ -311,11 +313,11 @@ public class LecturerGuidanceDetailActivity extends AppCompatActivity {
                             return;
                         }
 
-                        for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
+                        for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                             ArrayList<ChatBimbingan> chatBimbingans = new ArrayList<>();
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 ChatBimbingan chatBimbingan = document.toObject(ChatBimbingan.class);
-                                if (chatBimbingan.getId_bimbingan().equals(taskId)){
+                                if (chatBimbingan.getId_bimbingan().equals(taskId)) {
                                     //chatBimbingan.setTaskId(document.getId());
                                     chatBimbingans.add(chatBimbingan);
                                 }
@@ -345,7 +347,7 @@ public class LecturerGuidanceDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void getLecturerById(String nik){
+    private void getLecturerById(String nik) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Query getLecturerByIdQuery = db.collection("dosen")
                 .whereEqualTo("nik", nik)

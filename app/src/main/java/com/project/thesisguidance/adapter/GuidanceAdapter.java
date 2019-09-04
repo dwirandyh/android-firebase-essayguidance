@@ -30,14 +30,21 @@ public class GuidanceAdapter extends RecyclerView.Adapter<GuidanceAdapter.TaskVi
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_task, parent, false);
+                .inflate(R.layout.item_guidance, parent, false);
         return new TaskViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Bimbingan studentTask = studentTasks.get(position);
-        holder.tvTaskName.setText(studentTask.getBab());
+//        holder.tvTaskName.setText(studentTask.getBab());
+
+        if (studentTask.getBab().length() <= 1){
+            holder.tvTaskName.setText("BAB " + studentTask.getBab());
+        }else{
+            holder.tvTaskName.setText(studentTask.getBab());
+        }
+
         holder.tvStatus.setText(studentTask.getStatus_bab());
         holder.tvDescription.setText(studentTask.getKeterangan_bab());
 
